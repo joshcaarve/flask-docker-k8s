@@ -1,0 +1,16 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: josh-flask
+  labels:
+    app: josh-flask
+spec:
+  type: LoadBalancer
+  selector:
+    app: josh-flask
+  ports:
+    - name: http-josh-flask
+      protocol: TCP
+      port: 8000
+      targetPort: 5000
