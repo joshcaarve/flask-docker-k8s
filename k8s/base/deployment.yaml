@@ -1,0 +1,23 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: josh-flask
+  labels:
+    app: josh-flask
+spec:
+  selector:
+    matchLabels:
+      app: josh-flask
+  template:
+    metadata:
+      labels:
+        app: josh-flask
+    spec:
+      serviceAccountName: josh-flask-ksa
+      containers:
+        - name: josh-flask
+          image: josh-flask:latest
+          ports:
+            - name: http-josh-flask
+              containerPort: 5000
