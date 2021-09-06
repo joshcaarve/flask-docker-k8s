@@ -14,9 +14,10 @@ spec:
       labels:
         app: josh-flask
     spec:
+      serviceAccountName: josh-flask-ksa
       containers:
         - name: josh-flask
-          image: josh-flask:0.1.2
+          image: josh-flask:latest
           ports:
             - name: http-josh-flask
               containerPort: 5000
