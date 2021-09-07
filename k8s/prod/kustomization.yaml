@@ -1,0 +1,23 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+
+resources:
+- ../base
+
+namespace: josh-flask-ns-prod
+
+patches:
+- path: namespace-patch.yaml
+  target:
+    kind: Namespace
+    name: josh-flask-ns
+    version: v1
+- path: configmap-patch.yaml
+  target:
+    kind: ConfigMap
+    name: josh-flask-cm
+    version: v1
+images:
+- name: josh-flask
+  newTag: 0.0.1
