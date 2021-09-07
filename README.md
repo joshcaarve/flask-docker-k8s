@@ -1,62 +1,80 @@
 # flask-docker-k8s
 
-###
 
-# run locally
-python3 app.py
-./test.py localhost 5000 /
+# Running locally
 
-############################################
+## Start flask app
+```sh
+$ cd flask_and_docker
+$ python3 app.py
+```
+
+## Test a request to API
+```sh
+$ ./test_request test.py localhost 5000 /
+```
+
+# Running flask app with Docker
+
+## Set image name:
+```sh
+export IMAGE_NAME='josh-flask:0.0.1'
+```
+
+## Installing Docker Desktop
+
+```sh
+$ brew cask install docker
+```
+
+## Build the Image
+```sh
+$ cd flask_and_docker
+$ docker build -t $IMAGE_NAME . --no-cache
+$ docker run -p 8000:5000 $IMAGE_NAME
+```
+
+## Test a request to API
+```sh
+$ ./test_request/test.py 127.0.0.1 8000 /
+```
 
 
+# Running with Kubernetes
+## Intall minikube
 
-# Installing Docker Desktop
-https://www.docker.com/products/docker-desktop
-or
-brew cask install docker
+```sh
+$ brew install minikube
+```
 
+## Start minikube and use aliases
 
-# Docker First
-############################################
-docker build -t josh-flask:0.0.1 . --no-cache
-docker run -p 8000:5000 josh-flask:0.0.1
-./test.py 127.0.0.1 8000 /
+```sh
+$ source k8s/alias.sh
+$ minikube start
+```
 
-############################################
-
-# Installing minikube
-https://minikube.sigs.k8s.io/docs/start/
-
-brew install minikube
-
-# Test with minikube
-############################################
-
-source alias.sh
-
-minikube start  # start minikube
-
-# connect to docker desktop
+## Link to Docker to minikube and build image
+```sh
 eval $(minikube docker-env)
-
-# build image
+cd flask_and_docker
 docker build -t josh-flask:0.0.1 . --no-cache
+```
 
-# Kustomzize build and apply
-cd k8s/dev && kustomize edit set image josh-flask:0.0.1
-kustomize build k8s/dev/ | k apply -f -
+## Using script to kustomize and deploy dev
+```sh
+$ cd k8s/dev && kustomize edit set image $IMAGE_NAME
+$ kustomize build k8s/dev | kubectl apply -f - 
+$ k port-forward svc/josh-flask 8000
+```
 
-kubectl port-forward svc/josh-flask 8000
-k logs <pod-name> josh-flask
-kgs 
-# hit server
-./test.py 127.0.0.1 8000 /
+## Test a request to API
+```sh
+$ ./test_request/test.py 127.0.0.1 8000 /
+```
 
 
-
-# cleanup
-kgd
-k delete deployment josh-flask
-k delete service josh-flask
-
-minikube delete
+# Cleanup
+```sh
+$ minikube delete
+```
