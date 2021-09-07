@@ -58,7 +58,7 @@ $ minikube start
 ```sh
 eval $(minikube docker-env)
 cd flask_and_docker
-docker build -t josh-flask:0.0.1 . --no-cache
+docker build -t $IMAGE_NAME . --no-cache
 ```
 
 ## Using script to kustomize and deploy dev
@@ -73,6 +73,17 @@ $ k port-forward svc/josh-flask 8000
 $ ./test_request/test.py 127.0.0.1 8000 /
 ```
 
+## Using script to kustomize and deploy prod
+```sh
+$ cd k8s/prod && kustomize edit set image $IMAGE_NAME
+$ kustomize build k8s/prod | kubectl apply -f - 
+$ k port-forward svc/josh-flask 8000
+```
+
+## Test a request to API
+```sh
+$ ./test_request/test.py 127.0.0.1 8000 /
+```
 
 # Cleanup
 ```sh
